@@ -4,12 +4,12 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ d2b17e00-382c-11f1-3b3e-63fa5a148559
+# â•”â•â•¡ d2b17e00-382c-11f1-3b3e-63fa5a148559
 begin 
 	
 ############################################################
-# FIGURE 1 — Dogra et al.
-# Comparative statics of Ω with respect to σ, γ, and ϕ
+# FIGURE 1 â€” Dogra et al.
+# Comparative statics of Î© with respect to Ïƒ, Î³, and Ï•
 #
 # Required libraries:
 #   pkg> add Roots Plots
@@ -23,17 +23,15 @@ gr()
 
 end
 
-# ╔═╡ d3eec6f9-49fb-4b86-a695-a424aaeaffe1
+# â•”â•â•¡ d3eec6f9-49fb-4b86-a695-a424aaeaffe1
 using LinearAlgebra
 
-# ╔═╡ de9a67a3-c904-45eb-a46d-506691dce3a4
+# â•”â•â•¡ de9a67a3-c904-45eb-a46d-506691dce3a4
 
-using GenericSchur
 
-# ╔═╡ b55b6eeb-a5df-4367-a64d-420323f32247
-using ForwardDiff
+# â•”â•â•¡ b55b6eeb-a5df-4367-a64d-420323f32247
 
-# ╔═╡ 9d092bd0-53c6-11f1-2b21-b7063e2b89bd
+# â•”â•â•¡ 9d092bd0-53c6-11f1-2b21-b7063e2b89bd
 begin
     PROJECT_ROOT = normpath(joinpath(@__DIR__, ".."))
     FIGURES_DIR = joinpath(PROJECT_ROOT, "figures")
@@ -52,18 +50,17 @@ begin
 end
 
 
-# ╔═╡ 81ade795-8250-4957-8e16-ee7bb42242a6
+# â•”â•â•¡ 81ade795-8250-4957-8e16-ee7bb42242a6
 begin
-    using LaTeXStrings
 
     ############################################################
     # 1. Baseline calibration
     #
-    # This cell reproduces Figure 1 by computing Ω on three
+    # This cell reproduces Figure 1 by computing Î© on three
     # one-dimensional grids:
-    #   (a) varying σ̄
-    #   (b) varying γ, while plotting against the implied γ-grid
-    #   (c) varying ϕ
+    #   (a) varying ÏƒÌ„
+    #   (b) varying Î³, while plotting against the implied Î³-grid
+    #   (c) varying Ï•
     #
     # The parameter values follow the baseline calibration used
     # in the MATLAB replication code.
@@ -178,7 +175,7 @@ begin
     # statistics used in the figure.
     #
     # OMEGA_code is the object naturally produced by the internal
-    # MATLAB formulas, while Omega rescales it into the Ω object
+    # MATLAB formulas, while Omega rescales it into the Î© object
     # shown in the paper.
     function make_compstats_like(ec; guess=10.0)
         w = solve_w(ec; guess=guess)
@@ -197,7 +194,7 @@ begin
         # Internal object from the replication-package formulas.
         OMEGA_code = (THETA - 1.0 + LAM) / (1.0 - LAM)
 
-        # Ω plotted in Figure 1 of the paper.
+        # Î© plotted in Figure 1 of the paper.
         Omega = OMEGA_code / (1.0 - btil)
 
         (
@@ -223,9 +220,9 @@ begin
     # 4. Grids
     #
     # These grids follow the MATLAB replication logic:
-    #   - σ̄ grid for panel (a)
-    #   - ϕ grid for panel (c)
-    #   - γ̄ input grid for panel (b), later mapped into gam_grid
+    #   - ÏƒÌ„ grid for panel (a)
+    #   - Ï• grid for panel (c)
+    #   - Î³Ì„ input grid for panel (b), later mapped into gam_grid
     ############################################################
 
     n = 50
@@ -242,7 +239,7 @@ begin
     Omega_gambar_grid = zeros(n)
     gam_grid          = zeros(n)
 
-    # Panel (a): vary σ̄.
+    # Panel (a): vary ÏƒÌ„.
     # The previous solution is reused as the next initial guess
     # because neighboring grid points have very similar roots.
     local wguess = ec0.w
@@ -253,7 +250,7 @@ begin
         wguess = out.w
     end
 
-    # Panel (c): vary ϕ.
+    # Panel (c): vary Ï•.
     wguess = ec0.w
     for i in eachindex(varphi_grid)
         ecuse = merge(ec0, (varphi = varphi_grid[i],))
@@ -262,8 +259,8 @@ begin
         wguess = out.w
     end
 
-    # Panel (b): vary γ̄ in the primitive parametrization, but
-    # plot the result against the implied γ values returned by
+    # Panel (b): vary Î³Ì„ in the primitive parametrization, but
+    # plot the result against the implied Î³ values returned by
     # the steady-state computation.
     wguess = ec0.w
     for i in eachindex(gambar_grid)
@@ -299,8 +296,8 @@ begin
         sig_grid, Omega_sig_grid,
         color=:blue,
         title="(a)",
-        xlabel="σ",
-        ylabel="Ω",
+        xlabel="Ïƒ",
+        ylabel="Î©",
         xlims=(sig_grid[1], sig_grid[end]),
         ylims=(0.0, 0.40),
         yticks=0.0:0.05:0.40
@@ -310,7 +307,7 @@ begin
         gam_grid, Omega_gambar_grid,
         color=:blue,
         title="(b)",
-        xlabel="γ",
+        xlabel="Î³",
         ylabel="",
         xlims=(gam_grid[1], gam_grid[end]),
         ylims=(0.0, 0.25),
@@ -321,7 +318,7 @@ begin
         varphi_grid, Omega_varphi_grid,
         color=:blue,
         title="(c)",
-        xlabel="ϕ",
+        xlabel="Ï•",
         ylabel="",
         xlims=(varphi_grid[1], varphi_grid[end]),
         ylims=(-0.10, 0.20),
@@ -336,13 +333,13 @@ begin
     fig1
 end
 
-# ╔═╡ 1f61e41a-3382-474d-b0d5-994933f5b722
+# â•”â•â•¡ 1f61e41a-3382-474d-b0d5-994933f5b722
 begin
     
 
     ############################################################
-    # FIGURE 2 — Dogra et al.
-    # The effect of monetary policy on consumption inequality Σ_t
+    # FIGURE 2 â€” Dogra et al.
+    # The effect of monetary policy on consumption inequality Î£_t
     ############################################################
 
     baseline_fig2 = (
@@ -510,8 +507,8 @@ begin
             tplot_fig2, 100 .* sim_fig2.muhat[1:nplot_fig2],
             lw = 2.5,
             xlabel = "t",
-            ylabel = "×100",
-            title = "b. Passthrough μ̂_t",
+            ylabel = "Ã—100",
+            title = "b. Passthrough Î¼Ì‚_t",
             label = "total",
             grid = false
         )
@@ -527,8 +524,8 @@ begin
             tplot_fig2, 100 .* sim_fig2.yhat[1:nplot_fig2],
             lw = 2.5,
             xlabel = "t",
-            ylabel = "×100",
-            title = "c. Output ŷ_t",
+            ylabel = "Ã—100",
+            title = "c. Output Å·_t",
             legend = false,
             grid = false
         )
@@ -537,8 +534,8 @@ begin
             tplot_fig2, 100 .* sim_fig2.sigma_total[1:nplot_fig2],
             lw = 2.5,
             xlabel = "t",
-            ylabel = "×100",
-            title = "d. Inequality Σ̂_t",
+            ylabel = "Ã—100",
+            title = "d. Inequality Î£Ì‚_t",
             label = "full effect",
             grid = false
         )

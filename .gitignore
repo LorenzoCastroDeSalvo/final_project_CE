@@ -11,3 +11,6 @@ Thumbs.db
 /_site/
 /report.html
 /report_files/
+
+# Local backup of a broken hand-edited manifest
+Manifest_old_invalid.toml

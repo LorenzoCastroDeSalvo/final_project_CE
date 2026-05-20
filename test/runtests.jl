@@ -11,7 +11,7 @@ using HANKPolicies
     @test a_prime_policy(0.0, p.xi_bar, p) ≈ 0.0 atol = 1e-10
 
     out = mktempdir()
-    result = HANKPolicies.run(;
+    result = run(;
         output_dir=out,
         value_grid_length=41,
         n_nodes=5,
