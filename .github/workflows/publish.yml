@@ -43,6 +43,7 @@ jobs:
           mkdir -p _site
           cp report.html _site/index.html
           cp -r figures _site/figures
+          cp -r output _site/output
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
