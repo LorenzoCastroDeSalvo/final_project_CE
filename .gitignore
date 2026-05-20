@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+
+# Julia local build and coverage artifacts
+*.ji
+*.cov
+*.mem
+
+# Quarto local outputs
+/.quarto/
+/_site/
+/report.html
+/report_files/
