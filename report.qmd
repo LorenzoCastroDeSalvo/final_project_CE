@@ -1,158 +1,122 @@
----
-title: "Policy and Value Functions in a HANK Model"
-subtitle: "Computational Economics Final Project"
+﻿---
+title: "Optimal Monetary Policy According to HANK"
 author:
-  - name: Lorenzo Castro
-    affiliations: Collegio Carlo Alberto
-  - name: Paolo Diotallevi
-    affiliations: Collegio Carlo Alberto
+  - "Lorenzo Castro De Salvo"
+  - "Paolo Diotallevi"
 format:
   html:
-    theme: cosmo
     toc: true
-    toc-location: right
-    number-sections: false
-    fig-cap-location: bottom
-    fig-align: center
-    smooth-scroll: true
-    page-layout: article
-output-file: report.html
+    theme: cosmo
 execute:
   echo: false
   warning: false
-  message: false
 ---
 
-# Overview
+## Project
 
-This report studies policy and value functions in a HANK-style model. The main goal is to generate and visualize model-based objects such as consumption, labor, savings, value functions, and flow utility.
+This is our CCA CompEcon replication project based on Acharya, Challe and Dogra, **"Optimal Monetary Policy According to HANK"**. The goal is to reproduce selected figures from the paper in Julia and to add a small original numerical exercise on household policy and value functions.
 
-The project is implemented in Julia. The figures reported below are generated directly from the model code contained in this repository.
+- Paper: <https://www.aeaweb.org/articles?id=10.1257/aer.20200239>
+- Replication package: <https://doi.org/10.3886/E184261V1>
+- GitHub repository: <https://github.com/LorenzoCastroDeSalvo/final_project_CE>
 
-# Project repository
+## Computational Problem
 
-The Julia project repository is available at:
+The computational part is mainly deterministic. For Figures 1 and 2 we solve steady-state equations and simulate the model responses using Julia root-finding and recursions. For the household side, we implement the analytical policy rules from the paper and evaluate the value function on an asset grid using Gauss-Hermite quadrature for the idiosyncratic shock.
 
-[https://github.com/LorenzoCastroDeSalvo/final_project_CE](https://github.com/LorenzoCastroDeSalvo/final_project_CE)
+In short, the project translates the relevant formulas into a Julia package, checks the main analytical relationships, and produces the replicated figures through a single entry point, `run()`.
 
-The online report is available at:
+## Replicated Results
 
-[https://lorenzocastrodesalvo.github.io/final_project_CE/](https://lorenzocastrodesalvo.github.io/final_project_CE/)
+### Figure 1
 
-# Replication goals
+**Our Julia replication**
 
-The goal of the project is to create a small computational package that generates and visualizes the main policy and value functions of the model.
+![Replicated Figure 1](figures/figure1.png){width=80%}
 
-More specifically, the project aims to:
+**Original paper figure**
 
-- implement the model objects in Julia;
-- generate the main policy-function and value-function figures;
-- save the figures in reproducible output folders;
-- produce a Quarto report that documents the computational results.
+![Paper Figure 1](figures/paper_figure1.png){width=80%}
 
-# Model summary
+Figure 1 studies the comparative statics of the welfare-relevant policy weight `Omega`. The Julia code solves the scalar steady-state condition and varies key parameters to reproduce the shape of the paper's comparative statics.
 
-The project focuses on the numerical analysis of policy and value functions in a heterogeneous-agent New Keynesian model.
+### Figure 2
 
-The main objects studied in the report are consumption, labor, savings, value functions, and flow utility. These objects describe how agents behave in the model and how the model solution changes across different asset levels and cash-on-hand values.
+**Our Julia replication**
 
-The reported objects are not obtained from raw data. They are generated directly from the model and from the Julia scripts included in the repository.
+![Replicated Figure 2](figures/figure2.png){width=80%}
 
-# Julia implementation
+**Original paper figure**
 
-The core model code is stored in:
+![Paper Figure 2](figures/paper_figure2.png){width=80%}
 
-```text
-src/HANKPolicies.jl
+Figure 2 reproduces the model response to a real-rate shock. The implementation computes the steady state, simulates the response path, and decomposes the inequality effect into the channels emphasized in the paper.
+
+## Original Value Function Exercise
+
+Besides the replicated figures, we add our own numerical exercise for the household problem. These figures are not present in the paper: they visualize the analytical household policy rules and the value function computed from them.
+
+### Consumption Policy over Assets
+
+![Consumption policy over assets](output/policy_consumption_vs_assets.png){width=80%}
+
+Consumption is increasing and linear in assets, and higher `xi` shifts the policy upward because it raises cash-on-hand.
+
+### Consumption Policy over Cash-on-Hand
+
+![Consumption policy over cash-on-hand](output/policy_consumption_vs_cash_on_hand.png){width=80%}
+
+When consumption is plotted against cash-on-hand, the lines collapse. This confirms Proposition 1: consumption depends on assets and `xi` only through cash-on-hand `x`.
+
+### Labor Policy over Assets
+
+![Labor policy over assets](output/policy_labor_vs_assets.png){width=80%}
+
+Labor supply decreases with assets because higher wealth raises consumption and reduces the need to work, while higher `xi` shifts labor upward.
+
+### Labor Policy over Cash-on-Hand
+
+![Labor policy over cash-on-hand](output/policy_labor_vs_cash_on_hand.png){width=80%}
+
+Against cash-on-hand, labor lines do not collapse because labor depends directly on `xi` as well as indirectly through consumption.
+
+### Savings Policy over Assets
+
+![Savings policy over assets](output/policy_savings_vs_assets.png){width=80%}
+
+Next-period assets increase with current assets and `xi`, since higher resources and more favorable labor shocks allow households to save more.
+
+### Flow Utility over Assets
+
+![Flow utility over assets](output/flow_utility_vs_assets.png){width=80%}
+
+Flow utility increases with assets and with `xi`: higher assets relax the household budget constraint, while a higher `xi` makes labor less costly.
+
+### Value Function over Assets
+
+![Value function evaluated under analytical policies](output/value_function_vs_assets.png){width=80%}
+
+The value function increases with assets and `xi` because both improve current utility and expected future value; it is computed by policy evaluation under the analytical policy rules.
+
+## Julia Package
+
+The repository is organized as a Julia package called `HANKPolicies`, but the main file we use to reproduce the project outputs is `run_all.jl`. This script activates the project environment, instantiates the dependencies, creates the `figures/` and `output/` folders, and then runs the two scripts that generate the results used in the report:
+
+```julia
+include("scripts/policy_value_plots.jl")
+include("scripts/hank-figures.jl")
 ```
 
-The main figures are generated by:
+From the repository root, the full project can therefore be reproduced with:
 
-```text
-scripts/hank-figures.jl
+```powershell
+julia --project=. run_all.jl
 ```
 
-The supplementary diagnostic figures are generated by:
+The tests check that the package loads, the policy formulas satisfy basic analytical restrictions, and the plotting pipeline runs on a small grid.
 
-```text
-scripts/policy_value_plots.jl
-```
+## Conclusion
 
-The project uses `Project.toml` and `Manifest.toml` to define the Julia environment and make the computational results reproducible.
+We reproduce the main selected paper figures in Julia and complement them with an original value-function diagnostic. The project is intentionally compact: the website is meant to show what was replicated, what was added, and how the code can be run.
 
-# Repository structure
 
-The repository is organized as follows:
-
-```text
-src/HANKPolicies.jl                 Core Julia module
-scripts/hank-figures.jl             Generates the main report figures
-scripts/policy_value_plots.jl       Generates supplementary diagnostics
-figures/figure1.png                 Main report Figure 1
-figures/figure1.pdf                 PDF version of Figure 1
-figures/figure2.png                 Main report Figure 2
-figures/figure2.pdf                 PDF version of Figure 2
-output/*.png                        Supplementary generated diagnostics
-report.qmd                          Quarto source file for the report
-report.html                         Rendered HTML report
-```
-
-# Main results
-
-The two figures in this section are the main report outputs. They are loaded directly from the `figures/` directory. The corresponding `.pdf` files are also available in the same folder for publication or LaTeX workflows.
-
-![Main model-generated report figure.](figures/figure1.png){#fig-figure1 width="72%"}
-
-![Second main model-generated report figure.](figures/figure2.png){#fig-figure2 width="72%"}
-
-# Policy functions
-
-The figures below are generated by `scripts/policy_value_plots.jl` and saved in `output/`.
-
-They show how the policy functions vary with assets and cash-on-hand. These plots are useful for checking whether the model solution behaves in a reasonable way across the relevant state space.
-
-::: {layout-ncol=2}
-![Consumption policy by assets.](output/policy_consumption_vs_assets.png){#fig-cons-assets}
-
-![Consumption policy by cash-on-hand.](output/policy_consumption_vs_cash_on_hand.png){#fig-cons-coh}
-
-![Labor policy by assets.](output/policy_labor_vs_assets.png){#fig-labor-assets}
-
-![Labor policy by cash-on-hand.](output/policy_labor_vs_cash_on_hand.png){#fig-labor-coh}
-:::
-
-The next figure reports the savings policy as a function of assets.
-
-![Savings policy by assets.](output/policy_savings_vs_assets.png){#fig-savings-assets width="70%"}
-
-# Value and utility
-
-The final diagnostic figures report the value function and flow utility. These figures provide additional checks on the shape of the model solution.
-
-::: {layout-ncol=2}
-![Value function by assets.](output/value_function_vs_assets.png){#fig-value-assets}
-
-![Flow utility by assets.](output/flow_utility_vs_assets.png){#fig-flow-assets}
-:::
-
-# Reproducibility
-
-The Julia environment is defined by `Project.toml` and `Manifest.toml`.
-
-To reproduce the outputs from the repository root, run:
-
-```bash
-julia --project=. -e 'using Pkg; Pkg.instantiate()'
-julia --project=. scripts/hank-figures.jl
-julia --project=. scripts/policy_value_plots.jl
-```
-
-To render the report locally, run:
-
-```bash
-quarto render report.qmd
-```
-
-# Conclusion
-
-This project provides a reproducible Julia implementation for generating policy-function and value-function figures in a HANK-style model. The report documents the main outputs of the computational project and provides the commands needed to reproduce the results.

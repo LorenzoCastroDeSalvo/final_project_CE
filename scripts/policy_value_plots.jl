@@ -1,6 +1,9 @@
 using Plots
 using HANKPolicies
 
+const PROJECT_ROOT = normpath(joinpath(@__DIR__, ".."))
+const OUTPUT_DIR = joinpath(PROJECT_ROOT, "output")
+
 function closest_index(xs, x)
     return argmin(abs.(xs .- x))
 end
@@ -26,7 +29,7 @@ function plot_against_cash_on_hand(a_grid, xi_values, yfun, p, path; ylabel)
     return plt
 end
 
-function make_policy_value_plots(; output_dir="output")
+function make_policy_value_plots(; output_dir=OUTPUT_DIR)
     mkpath(output_dir)
     p = baseline_params()
     numerical_checks(p)
@@ -70,5 +73,5 @@ function make_policy_value_plots(; output_dir="output")
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
-    make_policy_value_plots()
+    make_policy_value_plots(output_dir=OUTPUT_DIR)
 end
