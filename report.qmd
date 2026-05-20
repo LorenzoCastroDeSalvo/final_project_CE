@@ -77,29 +77,29 @@ Figure 1 shows the comparative statics of the HANK policy weight `Omega`.
 Higher income-risk volatility and changes in risk aversion or the cyclicality
 of risk alter the planner's relative concern for inequality stabilization.
 
-![Comparative statics for Omega](images/figure1_omega_comparative_statics.png)
+![Comparative statics for Omega](figures/figure1_omega_comparative_statics.png)
 
 The package also plots the closed-form household policies. Consumption is
 linear in cash-on-hand with slope `mu`; labor and savings inherit the same
 analytical structure from the household problem.
 
-![Consumption policy over assets](images/policy_consumption_vs_assets.png)
+![Consumption policy over assets](output/policy_consumption_vs_assets.png)
 
-![Labor policy over assets](images/policy_labor_vs_assets.png)
+![Labor policy over assets](output/policy_labor_vs_assets.png)
 
-![Savings policy over assets](images/policy_savings_vs_assets.png)
+![Savings policy over assets](output/policy_savings_vs_assets.png)
 
 The final diagnostic figure evaluates the value function induced by the
 analytical policy rules over the asset grid and selected shock states.
 
-![Value function over assets](images/value_function_vs_assets.png)
+![Value function over assets](output/value_function_vs_assets.png)
 
 The notebook-export script also produced paper-style exhibits that are retained
 for reference. The main figures are copied into `images/` for easy discovery.
 
-![Notebook Figure 2](images/figure2.png)
+![Notebook Figure 2](figures/figure2.png)
 
-![Notebook Figure 5](images/figure5.png)
+![Notebook Figure 5](figures/figure5.png)
 
 ## Reproducibility Checklist
 
