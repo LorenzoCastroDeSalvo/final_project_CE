@@ -133,11 +133,11 @@ Besides the replicated figures, we add our own numerical exercise for the househ
 
 The original part of our Julia project focuses on the household-side exercise. We implement the policy functions implied by Proposition 1 and compute an individual value function under those analytical policies. The value-function plot is not a figure already present in the paper; it is a numerical diagnostic that helps us understand the household block.
 
-In the paper, the household chooses consumption, labor supply, and next-period assets. The objective is
+In the paper, the household born in period $s$ chooses consumption, labor supply, and next-period assets over dates $t \ge s$. The objective is
 
 $$
-\max_{c_t^s(i),\,l_t^s(i),\,a_{t+1}^s(i)}
-E_t \sum_{s=t}^{\infty} (\beta\vartheta)^{s-t} u(c_t^s(i),l_t^s(i);\xi_t^s(i)),
+\max_{\{c_t^s(i),\,l_t^s(i),\,a_{t+1}^s(i)\}_{t\ge s}}
+E_s \sum_{t=s}^{\infty} (\beta\vartheta)^{t-s} u(c_t^s(i),l_t^s(i);\xi_t^s(i)),
 $$
 
 subject to the budget constraint
