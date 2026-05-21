@@ -1,4 +1,4 @@
-name: Publish Quarto Report
+﻿name: Publish Quarto Report
 
 on:
   push:
@@ -42,6 +42,7 @@ jobs:
         run: |
           mkdir -p _site
           cp report.html _site/index.html
+          cp -r report_files _site/report_files
           cp -r figures _site/figures
           cp -r output _site/output
 
@@ -60,3 +61,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
