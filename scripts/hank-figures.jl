@@ -1,15 +1,14 @@
-### A Pluto.jl notebook ###
+﻿### A Pluto.jl notebook ###
 # v0.20.24
 
 using Markdown
 using InteractiveUtils
 
-# â•”â•â•¡ d2b17e00-382c-11f1-3b3e-63fa5a148559
 begin 
 	
 ############################################################
-# FIGURE 1 â€” Dogra et al.
-# Comparative statics of Î© with respect to Ïƒ, Î³, and Ï•
+# FIGURE 1 - Acharya, Challe and Dogra
+# Comparative statics of Omega with respect to sigma, gamma, and varphi
 #
 # Required libraries:
 #   pkg> add Roots Plots
@@ -23,15 +22,11 @@ gr()
 
 end
 
-# â•”â•â•¡ d3eec6f9-49fb-4b86-a695-a424aaeaffe1
 using LinearAlgebra
 
-# â•”â•â•¡ de9a67a3-c904-45eb-a46d-506691dce3a4
 
 
-# â•”â•â•¡ b55b6eeb-a5df-4367-a64d-420323f32247
 
-# â•”â•â•¡ 9d092bd0-53c6-11f1-2b21-b7063e2b89bd
 begin
     PROJECT_ROOT = normpath(joinpath(@__DIR__, ".."))
     FIGURES_DIR = joinpath(PROJECT_ROOT, "figures")
@@ -50,17 +45,16 @@ begin
 end
 
 
-# â•”â•â•¡ 81ade795-8250-4957-8e16-ee7bb42242a6
 begin
 
     ############################################################
     # 1. Baseline calibration
     #
-    # This cell reproduces Figure 1 by computing Î© on three
+    # This cell reproduces Figure 1 by computing Omega on three
     # one-dimensional grids:
-    #   (a) varying ÏƒÌ„
-    #   (b) varying Î³, while plotting against the implied Î³-grid
-    #   (c) varying Ï•
+    #   (a) varying sigma_bar
+    #   (b) varying gamma, while plotting against the implied gamma-grid
+    #   (c) varying varphi
     #
     # The parameter values follow the baseline calibration used
     # in the MATLAB replication code.
@@ -175,7 +169,7 @@ begin
     # statistics used in the figure.
     #
     # OMEGA_code is the object naturally produced by the internal
-    # MATLAB formulas, while Omega rescales it into the Î© object
+    # MATLAB formulas, while Omega rescales it into the Omega object
     # shown in the paper.
     function make_compstats_like(ec; guess=10.0)
         w = solve_w(ec; guess=guess)
@@ -194,7 +188,7 @@ begin
         # Internal object from the replication-package formulas.
         OMEGA_code = (THETA - 1.0 + LAM) / (1.0 - LAM)
 
-        # Î© plotted in Figure 1 of the paper.
+        # Omega plotted in Figure 1 of the paper.
         Omega = OMEGA_code / (1.0 - btil)
 
         (
@@ -220,9 +214,9 @@ begin
     # 4. Grids
     #
     # These grids follow the MATLAB replication logic:
-    #   - ÏƒÌ„ grid for panel (a)
-    #   - Ï• grid for panel (c)
-    #   - Î³Ì„ input grid for panel (b), later mapped into gam_grid
+    #   - sigma_bar grid for panel (a)
+    #   - varphi grid for panel (c)
+    #   - gamma_bar input grid for panel (b), later mapped into gam_grid
     ############################################################
 
     n = 50
@@ -239,7 +233,7 @@ begin
     Omega_gambar_grid = zeros(n)
     gam_grid          = zeros(n)
 
-    # Panel (a): vary ÏƒÌ„.
+    # Panel (a): vary sigma_bar.
     # The previous solution is reused as the next initial guess
     # because neighboring grid points have very similar roots.
     local wguess = ec0.w
@@ -250,7 +244,7 @@ begin
         wguess = out.w
     end
 
-    # Panel (c): vary Ï•.
+    # Panel (c): vary varphi.
     wguess = ec0.w
     for i in eachindex(varphi_grid)
         ecuse = merge(ec0, (varphi = varphi_grid[i],))
@@ -259,8 +253,8 @@ begin
         wguess = out.w
     end
 
-    # Panel (b): vary Î³Ì„ in the primitive parametrization, but
-    # plot the result against the implied Î³ values returned by
+    # Panel (b): vary gamma_bar in the primitive parametrization, but
+    # plot the result against the implied gamma values returned by
     # the steady-state computation.
     wguess = ec0.w
     for i in eachindex(gambar_grid)
@@ -296,8 +290,8 @@ begin
         sig_grid, Omega_sig_grid,
         color=:blue,
         title="(a)",
-        xlabel="Ïƒ",
-        ylabel="Î©",
+        xlabel="sigma",
+        ylabel="Omega",
         xlims=(sig_grid[1], sig_grid[end]),
         ylims=(0.0, 0.40),
         yticks=0.0:0.05:0.40
@@ -307,7 +301,7 @@ begin
         gam_grid, Omega_gambar_grid,
         color=:blue,
         title="(b)",
-        xlabel="Î³",
+        xlabel="gamma",
         ylabel="",
         xlims=(gam_grid[1], gam_grid[end]),
         ylims=(0.0, 0.25),
@@ -318,7 +312,7 @@ begin
         varphi_grid, Omega_varphi_grid,
         color=:blue,
         title="(c)",
-        xlabel="Ï•",
+        xlabel="varphi",
         ylabel="",
         xlims=(varphi_grid[1], varphi_grid[end]),
         ylims=(-0.10, 0.20),
@@ -333,13 +327,12 @@ begin
     fig1
 end
 
-# â•”â•â•¡ 1f61e41a-3382-474d-b0d5-994933f5b722
 begin
     
 
     ############################################################
-    # FIGURE 2 â€” Dogra et al.
-    # The effect of monetary policy on consumption inequality Î£_t
+    # FIGURE 2 - Acharya, Challe and Dogra
+    # The effect of monetary policy on consumption inequality Sigma_t
     ############################################################
 
     baseline_fig2 = (
@@ -493,12 +486,18 @@ begin
         nplot_fig2 = 11
         tplot_fig2 = sim_fig2.t[1:nplot_fig2]
 
+        default(
+            titlefont=font(10, "Computer Modern"),
+            guidefont=font(18, "Computer Modern"),
+            tickfont=font(11, "Computer Modern")
+        )
+
         fig2_p1 = plot(
             tplot_fig2, 100 .* sim_fig2.rhat[1:nplot_fig2],
             lw = 2.5,
             xlabel = "t",
             ylabel = "% pts",
-            title = "a. Real rate path",
+            title = "a. Real rate",
             legend = false,
             grid = false
         )
@@ -507,8 +506,8 @@ begin
             tplot_fig2, 100 .* sim_fig2.muhat[1:nplot_fig2],
             lw = 2.5,
             xlabel = "t",
-            ylabel = "Ã—100",
-            title = "b. Passthrough Î¼Ì‚_t",
+            ylabel = "",
+            title = "b. Passthrough",
             label = "total",
             grid = false
         )
@@ -524,8 +523,8 @@ begin
             tplot_fig2, 100 .* sim_fig2.yhat[1:nplot_fig2],
             lw = 2.5,
             xlabel = "t",
-            ylabel = "Ã—100",
-            title = "c. Output Å·_t",
+            ylabel = "",
+            title = "c. Output",
             legend = false,
             grid = false
         )
@@ -534,8 +533,8 @@ begin
             tplot_fig2, 100 .* sim_fig2.sigma_total[1:nplot_fig2],
             lw = 2.5,
             xlabel = "t",
-            ylabel = "Ã—100",
-            title = "d. Inequality Î£Ì‚_t",
+            ylabel = "",
+            title = "d. Inequality",
             label = "full effect",
             grid = false
         )
@@ -565,4 +564,5 @@ begin
         fig2
     end
 end
+
 
